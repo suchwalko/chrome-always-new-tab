@@ -86,28 +86,26 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
     navigationSources.set(targetTabId, activeTabId);
 });
 
-chrome.webNavigation.onCommitted.addListener((details) => {
-    const tabId = details.tabId;
-    const sourceTabId = navigationSources.get(tabId);
-    const isNewTab = tabId !== sourceTabId;
-    const isMyTab = myTabs.has(tabId);
-    const url = details.url;
-    const transitionType = details.transitionType;
-    const transitionQualifiers = details.transitionQualifiers;
-    const hasTransitionQualifiers = !!transitionQualifiers.length;
+chrome.webNavigation.onCommitted.addListener(async (details) => {
+    const sourceTabId = navigationSources.get(details.tabId);
+    const isNewTab = details.tabId !== sourceTabId;
+    const isMyTab = myTabs.has(details.tabId);
+    const hasTransitionQualifiers = !!details.transitionQualifiers.length;
 
-    if (isNewTab || isMyTab || !['link', 'auto_bookmark'].includes(transitionType) || hasTransitionQualifiers) {
+    if (details.transitionType !== 'auto_bookmark'
+        || isNewTab
+        || isMyTab
+        || hasTransitionQualifiers) {
         return;
     }
 
-    chrome.storage.local.get('enabled', (keys) => {
-        if (!keys.enabled) {
-            return;
-        }
-        chrome.tabs.goBack(sourceTabId);
-        chrome.tabs.create({ url: url, active: true }, (createdTab) => {
-            myTabs.add(createdTab.id);
-        });
+    if (!(await isEnabled())) {
+        return;
+    }
+
+    chrome.tabs.goBack(sourceTabId);
+    chrome.tabs.create({ url: details.url, active: true }, (createdTab) => {
+        myTabs.add(createdTab.id);
     });
 });
 

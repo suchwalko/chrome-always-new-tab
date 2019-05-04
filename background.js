@@ -1,6 +1,3 @@
-/*chrome.tabs.goBack(integer tabId, function callback)
-Since Chrome 72.*/
-
 const icons = {
     on: 'icons/browser-orange.png',
     off: 'icons/browser-grayscale.png'
@@ -27,7 +24,6 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener((details) => {
 
 chrome.webNavigation.onBeforeNavigate.addListener((details) => {
     const targetTabId = details.tabId;
-    // && navigationSources.get(targetTabId) != undefined
     if (navigationSources.has(targetTabId)) {
         return;
     }

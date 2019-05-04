@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Always New Tab",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["script.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icons/browser-orange.png"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "permissions": ["storage", "webNavigation"]
+}

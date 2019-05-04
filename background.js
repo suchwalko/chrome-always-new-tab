@@ -79,11 +79,11 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
         return;
     }
 
-    const at = await getActiveTabId();
-    if (getActiveTabId === null) {
+    const activeTabId = await getActiveTabId();
+    if (activeTabId === null) {
         return;
     }
-    navigationSources.set(targetTabId, getActiveTabId);
+    navigationSources.set(targetTabId, activeTabId);
 });
 
 chrome.webNavigation.onCommitted.addListener((details) => {

@@ -53,6 +53,7 @@ const getActiveTabId = () => {
                 const activeTab = activeTabs[0];
                 if (!activeTab || !activeTab.id) {
                     resolve(null);
+                    return;
                 }
                 resolve(activeTab.id);
             }
